@@ -61,7 +61,7 @@ case $n in
   3) 
       echo "Run LocalTest with local js"
       docker compose -fsrc/studio/docker-compose.yml down
-      export SUB_FILTER="sub_filter 'https://altinncdn.no/toolkits/altinn-app-frontend/3/altinn-app-frontend.js'  'http://localhost:8080/altinn-app-frontend.js';"
+      export SUB_FILTER="sub_filter 'https://altinncdn.no/toolkits/altinn-app-frontend/3/altinn-app-frontend.js'  'http://localhost:8080/altinn-app-frontend.js';   sub_filter 'https://altinncdn.no/toolkits/altinn-app-frontend/3/altinn-app-frontend.css'  'http://localhost:8080/altinn-app-frontend.css' ;"
       wt --title 'LocalTest Local js' -d 'src/Altinn.Apps/AppFrontend/react/altinn-app-frontend' PowerShell -c "npm run start" \; split-pane -V -d 'src/development'  docker compose "up" "--build" \; split-pane -d 'src/development/LocalTest' dotnet run
       echo "Visit http://altinn3local.no to see test in browser"
       ;;
