@@ -585,18 +585,21 @@ namespace Altinn.App.Api.Controllers
             if (changedByCalculation)
             {
                 string updatedServiceModelString = JsonSerializer.Serialize(serviceModel);
-                CalculationResult calculationResult = new CalculationResult(updatedDataElement);
-                try
+                if (updatedServiceModelString != serviceModelJsonString)
                 {
-                    Dictionary<string, object> changedFields = JsonHelper.FindChangedFields(serviceModelJsonString, updatedServiceModelString);
-                    calculationResult.ChangedFields = changedFields;
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, "Unable to determine changed fields");
-                }
+                    CalculationResult calculationResult = new CalculationResult(updatedDataElement);
+                    try
+                    {
+                        Dictionary<string, object> changedFields = JsonHelper.FindChangedFields(serviceModelJsonString, updatedServiceModelString);
+                        calculationResult.ChangedFields = changedFields;
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "Unable to determine changed fields");
+                    }
 
-                return StatusCode((int)HttpStatusCode.SeeOther, calculationResult);
+                    return StatusCode((int)HttpStatusCode.SeeOther, calculationResult);
+                }
             }
 
             return Created(dataUrl, updatedDataElement);
