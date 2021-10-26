@@ -2,6 +2,7 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
+import ErrorBoundary from 'utils/ErrorBoundry';
 import App from './App';
 import { run } from './sagas';
 import { store } from './store';
@@ -21,7 +22,9 @@ run();
 render(
   <Provider store={store}>
     <HashRouter>
-      <App />
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </HashRouter>
   </Provider>,
   document.getElementById('root'),
