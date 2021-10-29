@@ -50,9 +50,9 @@ git clone https://github.com/Altinn/altinn-studio
 cd altinn-studio
 ```
 
-#### Develop Altinn Studio
+#### Develop Altinn Apps
 
-To run Altinn Studio locally, follow the [Altinn Studio instructions](/src/studio/README.md).
+To run Altinn Studio to test apps locally, follow the [Altinn Studio instructions](/src/studio/README.md).
 
 #### Develop or run Apps
 
@@ -65,79 +65,6 @@ _NOTE: Currently, it is not possible to run Apps and Altinn Studio (designer) in
 ```bash
 docker-compose down
 ```
-
-##### Setting up local platform services for test
-
-1. Navigate to the `development` folder in the altinn-studio repo
-
-   ```bash
-   cd src/development
-   ```
-
-2. Start the loadbalancer container that routes between the local platform services and the app
-
-   ```bash
-   docker-compose up -d --build
-   ```
-
-3. Set path to app folder in local platform services:
-   - Open `appSettings.json` in the `LocalTest` folder, f.ex. in Visual Studio Code
-
-   ```bash
-   cd LocalTest
-   code appSettings.json
-   ```
-
-   - Change the setting `"AppRepsitoryBasePath"` to the full path to your app on the disk. Save the file.
-
-4. Start the local platform services (make sure you are in the LocalTest folder)
-
-   ```bash
-   dotnet run
-   ```
-
-5. Navigate to the app folder (specified in the step above)
-
-   ```bash
-   cd /<path to app on disk>
-   ```
-
-   - If you need to debug (or run locally) the app front-end:
-     - Open the file `views/Home/Index.cshtml` in your app repo and change the lines (don't commit these changes)
-
-     ```html
-     <link rel="stylesheet" type="text/css" href="https://altinncdn.no/toolkits/altinn-app-frontend/3/altinn-app-frontend.css">
-     ...
-     <script src="https://altinncdn.no/toolkits/altinn-app-frontend/2/altinn-app-frontend.js"></script>
-     ```
-
-     to
-
-     ```html
-      <link rel="stylesheet" type="text/css" href="http://localhost:8080/altinn-app-frontend.css">
-      ....
-      <script src="http://localhost:8080/altinn-app-frontend.js"></script>
-     ```
-
-     - Build and run the runtime front-end project locally (`altinn-studio/src/Altinn.Apps/AppFrontend/react`):
-  
-     ```bash
-     npm install # only needed first time, or when dependencies are updated
-     npm run install-deps # only needed first time, or when dependencies are updated
-     cd altinn-app-frontend
-     npm start
-     ```
-
-6. Start the app locally
-
-  ```bash
-  dotnet run -p App.csproj
-  ```
-
-The app and local platform services are now running locally.
-If you have configured your hosts as [described in the prerequisites](/src/studio/README.md#prerequisites), the app can be accessed on altinn3local.no.
-
-Log in with a test user, using your app name and org name. This will redirect you to the app.
 
 #### Building other react apps
 

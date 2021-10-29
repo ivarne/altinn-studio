@@ -47,9 +47,12 @@ These instructions will get you a copy of Altinn Studio up and running on your l
       - "/Users/<yourname>/AltinnCore/Repos:/AltinnCore/Repos"
     ```
 
-8. World Wide Web Publishing Service must be disabled, Services -> "World Wide Web Publishing Service" rigth click and choose "stop"
+8. Other services that uses port 80 must be stoped. 
+    - Common windows services that uses port 80
+        - World Wide Web Publishing Service must be disabled, Services -> "World Wide Web Publishing Service" rigth click and choose "stop"
+        - Branch Cache
 
-### Installing
+### Running everything in docker
 
 Clone [Altinn Studio repo](https://github.com/Altinn/altinn-studio) and navigate to the `studio` folder.
 
@@ -66,36 +69,20 @@ docker-compose up -d --build
 
 The solution is now available locally at [altinn3.no](http://altinn3.no). (Just create a new user for testing. No email verification required)
 
-If you make changes and want to rebuild a specific project using docker-compose this can be done using
+### Running altinn designer locally
 
-```bash
-docker-compose up -d --build <container>
-```
+Rebuilding the `altinn_designer` image is very slow, so you would typically want to run it native on your system for development/debugging for faster cycle times.
+`repository` and `load-balancer` still need to run in docker, but typically you won't change them often.
 
-Example
+#### Setup 
 
-```bash
-docker-compose up -d --build altinn_designer
-```
-
-### Running solutions locally
-
-#### Designer
-
-The Designer component can be run locally when developing/debugging. The rest of the solution (`repository` and `load-balancer`) will still have to be running in containers. Follow the install steps above if this has not already been done.
-
-Stop the container running Designer.
-
-```bash
-docker stop altinn-designer
-```
-
-Navigate to the designer backend folder. The first time running, or after any package changes, get the latest packages.
+Navigate to the designer backend folder and get npm dependencies. (This will have to be done periodically as packages get updated)
 
 ```bash
 cd src/studio/src/designer/backend
 npm ci
-npm run gulp-install-deps
+npm run gulp-install-deps # install deps in the full workspace
+npm run gulp # first time only
 ```
 
 On MacOS you need two extra steps:
@@ -114,26 +101,42 @@ On MacOS you need two extra steps:
       export ALTINN_KEYS_DIRECTORY=/Users/<yourname>/studio/keys
       ```
 
-Build and run the code.
+
+#### Build and run the code.
+Consider if you need to update npm dependencies.
+Here you have multiple options for which part of the application you want to run. 
+
+1. Start everything in a single console window.
 
 ```bash
+# cd src/studio/src/designer/backend
+docker compose up -d --build altinn_repositories altinn_loadbalancer 
 dotnet build
-npm run gulp # first time only
 npm run gulp-develop
 ```
 
-If you are not going to edit the designer react app (frontend) you can use
+2. Start docker, frontend and backend in console windows
 
 ```bash
-cd src/studio/src/designer/backend
-npm ci
-npm run gulp # first time only
-dotnet run
+# cd src/studio/src/designer/backend
+# window 1
+docker compose up -d --build altinn_repositories altinn_loadbalancer
+# window 2
+dotnet watch run
+# window 3
+npm run gulp-develop-frontend
 ```
 
-Which will build the Designer .net backend and the designer react app, but not listen to changes to the react app.
+3. A slightly faster setup if you are only working on dotnet backend (and don't need to watch react files)
 
-#### Building other react apps
+```bash
+# cd src/studio/src/designer/backend
+docker compose up -d --build altinn_repositories altinn_loadbalancer 
+npm run gulp
+dotnet watch run
+```
+
+### Building other react apps
 
 If you need to rebuild other react apps, for instance `dashboard` or `app-development`, this can be done by navigating to their respective folders, example `src/studio/src/designer/frontend/dashboard` and then run the following build script
 
