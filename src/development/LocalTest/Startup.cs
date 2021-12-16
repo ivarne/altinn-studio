@@ -155,7 +155,7 @@ namespace LocalTest
             IWebHostEnvironment env,
             IOptions<LocalPlatformSettings> localPlatformSettings)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("docker"))
             {
                 app.UseDeveloperExceptionPage();
 
