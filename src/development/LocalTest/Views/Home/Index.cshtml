@@ -80,6 +80,10 @@
         <label for="exampleInputEmail1">Select your authentication level</label>
         @Html.DropDownListFor(model => model.AuthenticationLevel, Model.AuthenticationLevels, new { Class = "form-control" })
       </div>
+      <div class="form-group">
+        <label for="">Use locally compiled js and css</label>
+        @Html.CheckBoxFor(model=>model.UseLocalFrontend, new { Class = "form-control" })
+      </div>
       <button type="submit" class="btn btn-primary">Proceed to app</button>
     }
 

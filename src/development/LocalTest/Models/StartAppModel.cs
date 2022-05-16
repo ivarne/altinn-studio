@@ -70,6 +70,12 @@ namespace LocalTest.Models
         public string AuthenticationLevel { get; set; }
 
         /// <summary>
+        /// Set a cookie for the nginx localtest loadbalancer to substitute
+        /// 
+        /// </summary>
+        public bool UseLocalFrontend { get; set; }
+
+        /// <summary>
         /// List of TestUsers for dropdown
         /// </summary>
         public IEnumerable<SelectListItem> TestUsers { get; set; }

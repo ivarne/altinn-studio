@@ -78,6 +78,7 @@ namespace LocalTest.Controllers
             model.LocalAppUrl = _localPlatformSettings.LocalAppUrl;
             var defaultAuthLevel = _localPlatformSettings.LocalAppMode == "http" ? await GetAppAuthLevel(model.TestApps) : 2;
             model.AuthenticationLevels = GetAuthenticationLevels(defaultAuthLevel);
+            model.UseLocalFrontend = HttpContext.Request.Cookies["localJs"] == "localhost";
 
             if (!model.TestApps?.Any() ?? true)
             {
@@ -136,6 +137,20 @@ namespace LocalTest.Controllers
 
             // Ensure that the documentstorage in LocalTestingStorageBasePath is updated with the most recent app data
             await _applicationRepository.Update(app);
+
+            // sync cookie for localJs
+            if((HttpContext.Request.Cookies["localJs"] == "localhost") != startAppModel.UseLocalFrontend)
+            {
+                    ICookieManager cookieManager = new ChunkingCookieManager();
+                    cookieManager.AppendResponseCookie(
+                        HttpContext,
+                        "localJs",
+                        "localhost",
+                        new CookieOptions{
+                            Expires = DateTime.MaxValue,
+                            HttpOnly = true,
+                        });
+            }
 
             return Redirect($"{_generalSettings.GetBaseUrl}/{app.Id}/");
         }
