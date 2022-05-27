@@ -24,7 +24,7 @@
       "applicationUrl": "http://localhost:5101",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_URLS": "http://localhost:5101/"
+        "ASPNETCORE_URLS": "http://local.altinn.cloud/;http://localhost:5101/"
       }
     }
   }

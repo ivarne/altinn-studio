@@ -185,6 +185,8 @@ namespace LocalTest
                 app.UseHsts();
             }
 
+            app.UseMiddleware<Controllers.ProxyMiddleware>();
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(localPlatformSettings.Value.LocalTestingStorageBasePath),
