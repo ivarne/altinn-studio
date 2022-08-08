@@ -88,6 +88,14 @@ namespace LocalTest.Controllers
             foreach (var header in context.Request.Headers)
             {
                 requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
+                if (requestMessage.Content is not null &&
+                    (
+                        header.Key == "Content-Type" ||
+                        header.Key == "Content-Disposition"
+                    ))
+                {
+                    requestMessage.Content.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
+                }
             }
             requestMessage.Headers.Host = new Uri(newHost).Host;
             return requestMessage;
